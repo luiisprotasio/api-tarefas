@@ -37,8 +37,8 @@ export class TarefaController{
     try{
         const {id} = req.params;
         const taskId = Number(id);
-        const {name,desc} = req.body;
-        const editedTask = tarefaService.edit({name,desc,taskId});
+        const {name,desc,done} = req.body;
+        const editedTask = tarefaService.edit({name,desc,taskId,done});
         return res.status(200).json(editedTask);
     }
     catch (error:any){

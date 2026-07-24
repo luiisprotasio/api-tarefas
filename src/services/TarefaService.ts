@@ -10,9 +10,10 @@ interface CriarTarefa{
     desc:string
 };
 interface EditarTarefa{
-    name:string,
-    desc:string,
-    taskId:number
+    name?:string,
+    desc?:string,
+    taskId:number,
+    done?:boolean
 }
 let bancoDeDados: Tarefa[] = [];
 export class TarefaService {
@@ -42,7 +43,7 @@ export class TarefaService {
         }
         return searchedTask;
     }
-    edit({name,desc,taskId}:EditarTarefa){
+    edit({name,desc,taskId,done}:EditarTarefa){
          const editTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(taskId));
            
         if (!editTask){
@@ -50,6 +51,7 @@ export class TarefaService {
         }
         if (desc) {editTask.description=desc;}
         if (name){editTask.title=name;}
+        if (done !== undefined) {editTask.done=done;}
         return editTask;
     }
 }
