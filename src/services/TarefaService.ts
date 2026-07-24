@@ -7,7 +7,13 @@ description:string,
 done:boolean};
 interface CriarTarefa{
     name:string,
-    desc:string};
+    desc:string
+};
+interface EditarTarefa{
+    name:string,
+    desc:string,
+    taskId:number
+}
 let bancoDeDados: Tarefa[] = [];
 export class TarefaService {
     create({name,desc}:CriarTarefa){
@@ -36,7 +42,7 @@ export class TarefaService {
         }
         return searchedTask;
     }
-    edit({name,desc}:CriarTarefa, taskId:number){
+    edit({name,desc,taskId}:EditarTarefa){
          const editTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(taskId));
            
         if (!editTask){
