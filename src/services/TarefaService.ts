@@ -25,7 +25,13 @@ export class TarefaService {
         bancoDeDados.push(novaTarefa);
         return novaTarefa;
     }
-    list(){
+    list(done?:string){
+        if (done === "true"){
+            return bancoDeDados.filter((tarefa) => tarefa.done === true);
+        }
+        if (done === "false") {
+            return bancoDeDados.filter((tarefa) => tarefa.done === false);
+        }
         return bancoDeDados;
     }
     delete(idDelete:number){

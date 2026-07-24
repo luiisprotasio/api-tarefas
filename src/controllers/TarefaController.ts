@@ -3,7 +3,8 @@ import type { Request, Response } from "express";
 const tarefaService = new TarefaService();
 export class TarefaController{
  listTasks(req: Request, res:Response){
-    const tarefas = tarefaService.list();
+    const {done}=req.query;
+    const tarefas = tarefaService.list(done as string|undefined);
     return res.status(200).json(tarefas);
  }
  searchTask(req: Request, res:Response){
