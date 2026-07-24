@@ -7,8 +7,8 @@ export class TarefaController{
     return res.status(200).json(tarefas);
  }
  searchTask(req: Request, res:Response){
-  try{  const searchId = req.body;
-    const task = tarefaService.search(searchId);
+  try{  const {id} = req.params;
+    const task = tarefaService.search(Number(id));
     return res.status(200).json(task);
  }
  catch (error:any){
@@ -26,15 +26,18 @@ export class TarefaController{
  }
  deleteTask(req:Request, res:Response){
     try {
-        const id:number = req.body;
-        tarefaService.delete(id);
+        const {id} = req.params;
+        tarefaService.delete(Number(id));
+        return res.status(204).send();
     } catch (error:any){
         return res.status(400).json({erro: error.message});
     }
  }
  editTask(req:Request, res:Response){
     try{
-        const {name,desc,taskId} = req.body;
+        const {id} = req.params;
+        const taskId = Number(id);
+        const {name,desc} = req.body;
         const editedTask = tarefaService.edit({name,desc,taskId});
         return res.status(200).json(editedTask);
     }
