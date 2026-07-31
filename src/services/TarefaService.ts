@@ -1,11 +1,11 @@
 import { error } from "node:console";
-
+import {prisma} from "../config/prismaClient"
 export interface Tarefa{
 id:number,
 title:string,
 description:string,
 done:boolean};
-interface CriarTarefa{
+interface CriarTarefa{  
     name:string,
     desc:string
 };
@@ -17,12 +17,16 @@ interface EditarTarefa{
 }
 let bancoDeDados: Tarefa[] = [];
 export class TarefaService {
-    create({name,desc}:CriarTarefa){
+    async create({name,desc}:CriarTarefa){
         if (!name){
             throw new Error("Nome da tarefa é obrigatório");
         }
-        const novaTarefa = {id:Math.floor(Math.random()*1000), title: name, description: desc, done: false};
-        bancoDeDados.push(novaTarefa);
+        const novaTarefa = await prisma.task.create({
+            data:{
+                title: name,
+                description: desc,
+            },
+        });
         return novaTarefa;
     }
     getAll(done?:string){
