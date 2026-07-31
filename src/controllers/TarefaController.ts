@@ -13,7 +13,7 @@ export class TarefaController{
     return res.status(200).json(task);
  }
  catch (error:any){
-    return res.status(400).json({erro: error.message});
+    return res.status(404).json({erro: error.message});
  }
  }
  async createTask(req:Request, res:Response){
@@ -31,7 +31,7 @@ export class TarefaController{
         const deletedTask = await tarefaService.delete(Number(id));
         return res.status(204).json(deletedTask);
     } catch (error:any){
-        return res.status(400).json({erro: error.message});
+        return res.status(404).json({erro: error.message});
     }
  }
  async editTask(req:Request, res:Response){
@@ -43,7 +43,7 @@ export class TarefaController{
         return res.status(200).json(editedTask);
     }
     catch (error:any){
-        return res.status(400).json({erro: error.message});
+        return res.status(404).json({erro: error.message});
     }
  }
 }

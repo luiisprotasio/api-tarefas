@@ -15,7 +15,6 @@ interface EditarTarefa{
     taskId:number,
     done?:boolean
 }
-let bancoDeDados: Tarefa[] = [];
 export class TarefaService {
     async create({name,desc}:CriarTarefa){
         if (!name){
