@@ -65,7 +65,7 @@ const tarefas = await prisma.task.findMany({
         return deletedTask;
     }
     async getById(idSearch:number){
-        const searchedTask = await prisma.task.findFirst({where:{
+        const searchedTask = await prisma.task.findUnique({where:{
             id: idSearch,
         }})
         if (!searchedTask){
@@ -73,15 +73,15 @@ const tarefas = await prisma.task.findMany({
         }
         return searchedTask;
     }
-    edit({name,desc,taskId,done}:EditarTarefa){
-         const editTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(taskId));
-           
-        if (!editTask){
-            throw new Error("Tarefa não encontrada");
-        }
-        if (desc) {editTask.description=desc;}
-        if (name){editTask.title=name;}
-        if (done !== undefined) {editTask.done=done;}
+    async edit({name,desc,taskId,done}:EditarTarefa){
+         const editTask = await prisma.task.update({where:{
+            id: taskId,
+         },
+        data:{
+            ...(name !== undefined && { title: name }),
+            ...(desc !== undefined && { description: desc }),
+            ...(done !== undefined && { completed:done }),
+        }})
         return editTask;
     }
 }

@@ -34,12 +34,12 @@ export class TarefaController{
         return res.status(400).json({erro: error.message});
     }
  }
- editTask(req:Request, res:Response){
+ async editTask(req:Request, res:Response){
     try{
         const {id} = req.params;
         const taskId = Number(id);
         const {name,desc,done} = req.body;
-        const editedTask = tarefaService.edit({name,desc,taskId,done});
+        const editedTask = await tarefaService.edit({name,desc,taskId,done});
         return res.status(200).json(editedTask);
     }
     catch (error:any){
