@@ -7,9 +7,9 @@ export class TarefaController{
     const tarefas = await tarefaService.getAll(done as string|undefined);
     return res.status(200).json(tarefas);
  }
- searchTask(req: Request, res:Response){
+ async searchTask(req: Request, res:Response){
   try{  const {id} = req.params;
-    const task = tarefaService.getById(Number(id));
+    const task = await tarefaService.getById(Number(id));
     return res.status(200).json(task);
  }
  catch (error:any){
@@ -25,11 +25,11 @@ export class TarefaController{
         return res.status(400).json({erro: error.message});
     }
  }
- deleteTask(req:Request, res:Response){
+ async deleteTask(req:Request, res:Response){
     try {
         const {id} = req.params;
-        tarefaService.delete(Number(id));
-        return res.status(204).send();
+        const deletedTask = await tarefaService.delete(Number(id));
+        return res.status(204).json(deletedTask);
     } catch (error:any){
         return res.status(400).json({erro: error.message});
     }

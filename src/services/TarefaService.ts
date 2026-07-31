@@ -52,16 +52,22 @@ const tarefas = await prisma.task.findMany({
        }
     
     }
-    delete(idDelete:number){
-        const deletedTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(idDelete));
+    async delete(idDelete:number){
+        const deletedTask = await prisma.task.findFirst({where:{
+            id: idDelete,
+        }})
         if (!deletedTask){
             throw new Error("Tarefa não encontrada");
         }
-        bancoDeDados=bancoDeDados.filter((tarefa)=> tarefa !== deletedTask);
-
+        await prisma.task.delete({where:{
+            id: idDelete
+        }})
+        return deletedTask;
     }
-     getById(idSearch:number){
-        const searchedTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(idSearch));
+    async getById(idSearch:number){
+        const searchedTask = await prisma.task.findFirst({where:{
+            id: idSearch,
+        }})
         if (!searchedTask){
             throw new Error("Tarefa não encontrada");
         }
