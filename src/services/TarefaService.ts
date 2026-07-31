@@ -25,7 +25,7 @@ export class TarefaService {
         bancoDeDados.push(novaTarefa);
         return novaTarefa;
     }
-    list(done?:string){
+    getAll(done?:string){
         if (done === "true"){
             return bancoDeDados.filter((tarefa) => tarefa.done === true);
         }
@@ -42,7 +42,7 @@ export class TarefaService {
         bancoDeDados=bancoDeDados.filter((tarefa)=> tarefa !== deletedTask);
 
     }
-     search(idSearch:number){
+     getById(idSearch:number){
         const searchedTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(idSearch));
         if (!searchedTask){
             throw new Error("Tarefa não encontrada");
