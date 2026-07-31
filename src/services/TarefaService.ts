@@ -29,14 +29,28 @@ export class TarefaService {
         });
         return novaTarefa;
     }
-    getAll(done?:string){
+    async getAll(done?:string){
         if (done === "true"){
-            return bancoDeDados.filter((tarefa) => tarefa.done === true);
+       const tarefas = await prisma.task.findMany({
+        where: {
+            completed:true,
         }
-        if (done === "false") {
-            return bancoDeDados.filter((tarefa) => tarefa.done === false);
+       });    
+       return tarefas;
+    }
+       else if (done==="false"){
+const tarefas = await prisma.task.findMany({
+        where: {
+            completed:false,
         }
-        return bancoDeDados;
+       });
+         return tarefas;
+         }
+       else {
+        const tarefas = await prisma.task.findMany();
+           return tarefas;
+       }
+    
     }
     delete(idDelete:number){
         const deletedTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(idDelete));

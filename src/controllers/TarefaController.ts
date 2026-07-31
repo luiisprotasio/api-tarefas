@@ -2,24 +2,24 @@ import { TarefaService } from "../services/TarefaService.js";
 import type { Request, Response } from "express";
 const tarefaService = new TarefaService();
 export class TarefaController{
- listTasks(req: Request, res:Response){
+ async listTasks(req: Request, res:Response){
     const {done}=req.query;
-    const tarefas = tarefaService.list(done as string|undefined);
+    const tarefas = await tarefaService.getAll(done as string|undefined);
     return res.status(200).json(tarefas);
  }
  searchTask(req: Request, res:Response){
   try{  const {id} = req.params;
-    const task = tarefaService.search(Number(id));
+    const task = tarefaService.getById(Number(id));
     return res.status(200).json(task);
  }
  catch (error:any){
     return res.status(400).json({erro: error.message});
  }
  }
- createTask(req:Request, res:Response){
+ async createTask(req:Request, res:Response){
     try {
         const {name,desc} = req.body;
-        const newTask = tarefaService.create({name,desc});
+        const newTask = await tarefaService.create({name,desc});
         return res.status(201).json(newTask);
     } catch (error:any){
         return res.status(400).json({erro: error.message});
