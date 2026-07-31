@@ -28,8 +28,8 @@ export class TarefaController{
  async deleteTask(req:Request, res:Response){
     try {
         const {id} = req.params;
-        const deletedTask = await tarefaService.delete(Number(id));
-        return res.status(204).json(deletedTask);
+        await tarefaService.delete(Number(id));
+        return res.status(204).send();
     } catch (error:any){
         return res.status(404).json({erro: error.message});
     }

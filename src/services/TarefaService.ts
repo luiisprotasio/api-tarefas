@@ -73,6 +73,10 @@ const tarefas = await prisma.task.findMany({
         return searchedTask;
     }
     async edit({name,desc,taskId,done}:EditarTarefa){
+        const task = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!task) {
+        throw new Error("Tarefa não encontrada");
+    }
          const editTask = await prisma.task.update({where:{
             id: taskId,
          },
