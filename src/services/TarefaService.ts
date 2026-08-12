@@ -1,11 +1,11 @@
 import { error } from "node:console";
-
+import {prisma} from "../config/prismaClient"
 export interface Tarefa{
 id:number,
 title:string,
 description:string,
 done:boolean};
-interface CriarTarefa{
+interface CriarTarefa{  
     name:string,
     desc:string
 };
@@ -15,49 +15,76 @@ interface EditarTarefa{
     taskId:number,
     done?:boolean
 }
-let bancoDeDados: Tarefa[] = [];
 export class TarefaService {
-    create({name,desc}:CriarTarefa){
+    async create({name,desc}:CriarTarefa){
         if (!name){
             throw new Error("Nome da tarefa é obrigatório");
         }
-        const novaTarefa = {id:Math.floor(Math.random()*1000), title: name, description: desc, done: false};
-        bancoDeDados.push(novaTarefa);
+        const novaTarefa = await prisma.task.create({
+            data:{
+                title: name,
+                description: desc,
+            },
+        });
         return novaTarefa;
     }
-    list(done?:string){
+    async getAll(done?:string){
         if (done === "true"){
-            return bancoDeDados.filter((tarefa) => tarefa.done === true);
+       const tarefas = await prisma.task.findMany({
+        where: {
+            completed:true,
         }
-        if (done === "false") {
-            return bancoDeDados.filter((tarefa) => tarefa.done === false);
-        }
-        return bancoDeDados;
+       });    
+       return tarefas;
     }
-    delete(idDelete:number){
-        const deletedTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(idDelete));
+       else if (done==="false"){
+const tarefas = await prisma.task.findMany({
+        where: {
+            completed:false,
+        }
+       });
+         return tarefas;
+         }
+       else {
+        const tarefas = await prisma.task.findMany();
+           return tarefas;
+       }
+    
+    }
+    async delete(idDelete:number){
+        const deletedTask = await prisma.task.findFirst({where:{
+            id: idDelete,
+        }})
         if (!deletedTask){
             throw new Error("Tarefa não encontrada");
         }
-        bancoDeDados=bancoDeDados.filter((tarefa)=> tarefa !== deletedTask);
-
+        await prisma.task.delete({where:{
+            id: idDelete
+        }})
+        return deletedTask;
     }
-     search(idSearch:number){
-        const searchedTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(idSearch));
+    async getById(idSearch:number){
+        const searchedTask = await prisma.task.findUnique({where:{
+            id: idSearch,
+        }})
         if (!searchedTask){
             throw new Error("Tarefa não encontrada");
         }
         return searchedTask;
     }
-    edit({name,desc,taskId,done}:EditarTarefa){
-         const editTask = bancoDeDados.find((tarefa)=>tarefa.id === Number(taskId));
-           
-        if (!editTask){
-            throw new Error("Tarefa não encontrada");
-        }
-        if (desc) {editTask.description=desc;}
-        if (name){editTask.title=name;}
-        if (done !== undefined) {editTask.done=done;}
+    async edit({name,desc,taskId,done}:EditarTarefa){
+        const task = await prisma.task.findUnique({ where: { id: taskId } });
+    if (!task) {
+        throw new Error("Tarefa não encontrada");
+    }
+         const editTask = await prisma.task.update({where:{
+            id: taskId,
+         },
+        data:{
+            ...(name !== undefined && { title: name }),
+            ...(desc !== undefined && { description: desc }),
+            ...(done !== undefined && { completed:done }),
+        }})
         return editTask;
     }
 }
