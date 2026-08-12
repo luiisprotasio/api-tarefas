@@ -1,0 +1,11 @@
+import express from 'express';
+import { Router } from 'express';
+import { TarefaController } from '../controllers/TarefaController.js';
+const tasksApp = Router();
+const taskController = new TarefaController;
+tasksApp.get('/', taskController.listTasks);
+tasksApp.post('/',taskController.createTask);
+tasksApp.get('/:id',taskController.searchTask);
+tasksApp.delete('/:id',taskController.deleteTask);
+tasksApp.put('/:id',taskController.editTask);
+export {tasksApp};
